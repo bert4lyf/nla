@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLA Number Simulator - Practical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #667eea;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .warning-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 5px solid #c0392b;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin: 20px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .results {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .numbers-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .number {
+            width: 60px;
+            height: 60px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            animation: pop 0.5s ease-out;
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .educational-info {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .educational-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .educational-info ul {
+            list-style-position: inside;
+            text-align: left;
+        }
+        
+        .educational-info li {
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #bdc3c7;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning-banner">
+            <strong>⚠️ IMPORTANT DISCLAIMER:</strong> This is a PROGRAMMED simulator. 
+            Lottery numbers are RANDOM and CANNOT be predicted. No "sure winning" numbers exist.
+        </div>
+        
+        <h1>🎰 NLA Number Simulator</h1>
+        <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">
+            For Practical and Entertainment Purposes Only
+        </p>
+        
+        <div class="input-group">
+            <label for="drawDate">Select a Date:</label>
+            <input type="date" id="drawDate">
+        </div>
+        
+        <button onclick="generateNumbers()">Generate Numbers</button>
+        
+        <div class="results" id="results" style="display: none;">
+            <h2>Simulated Numbers for <span id="selectedDate"></span>:</h2>
+            <div class="numbers-display" id="numbersDisplay"></div>
+            <p><em>Remember: These are randomly generated </em></p>
+        </div>
+        
+        <div class="educational-info">
+            <h3>🎯 Why Lottery Prediction is Impossible</h3>
+            <ul>
+                <li>🎲 Lottery draws are designed to be completely random</li>
+                <li>📊 Each number has equal probability of being drawn</li>
+                <li>🔢 Past results do not influence future draws</li>
+                <li>📈 Odds of winning are extremely low (mathematically)</li>
+                <li>💡 No software or system can predict random events</li>
+            </ul>
+        </div>
+        
+        <div class="educational-info" style="background: #fff3cd; border-left: 5px solid #ffc107;">
+            <h3>🎯 Responsible Gambling Information</h3>
+            <ul>
+                <li>💰 Set a budget and stick to it</li>
+                <li>⏰ Take regular breaks from gambling</li>
+                <li>🎯 Treat lottery as entertainment, not investment</li>
+                <li>🚫 Never chase losses</li>
+                <li>📞 Need help? Call +233 20 544 0019</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>This simulator is for practical purposes only. Always gamble responsibly.</p>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('drawDate').valueAsDate = new Date();
+        
+        function generateNumbers() {
+            const dateInput = document.getElementById('drawDate').value;
+            const selectedDate = new Date(dateInput).toLocaleDateString();
+            
+            // Use date as seed for pseudo-random generation
+            const seed = dateInput.split('-').join('');
+            const numbers = generatePseudoRandomNumbers(seed, 5, 90);
+            
+            // Display results
+            document.getElementById('selectedDate').textContent = selectedDate;
+            
+            const numbersDisplay = document.getElementById('numbersDisplay');
+            numbersDisplay.innerHTML = '';
+            
+            numbers.forEach(num => {
+                const numberElement = document.createElement('div');
+                numberElement.className = 'number';
+                numberElement.textContent = num;
+                numbersDisplay.appendChild(numberElement);
+            });
+            
+            document.getElementById('results').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        
+        function generatePseudoRandomNumbers(seed, count, max) {
+            // Simple pseudo-random generator using seed
+            let generated = new Set();
+            let pseudoRandom = simpleRandom(seed);
+            
+            while (generated.size < count) {
+                const num = Math.floor(pseudoRandom() * max) + 1;
+                generated.add(num);
+            }
+            
+            return Array.from(generated).sort((a, b) => a - b);
+        }
+        
+        function simpleRandom(seed) {
+            let value = hashString(seed);
+            return function() {
+                value = (value * 9301 + 49297) % 233280;
+                return value / 233280;
+            };
+        }
+        
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0; // Convert to 32bit integer
+            }
+            return Math.abs(hash);
+        }
+        
+        // Generate numbers on page load for today
+        window.addEventListener('load', function() {
+            setTimeout(generateNumbers, 1000);
+        });
+    </script>
+</body>
+</html>
