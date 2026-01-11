@@ -203,7 +203,7 @@
             
             // Use date as seed for pseudo-random generation
             const seed = dateInput.split('-').join('');
-            const numbers = generatePseudoRandomNumbers(seed, 10, 90);
+            const numbers = generatePseudoRandomNumbers(seed, 1, 90);
             
             // Display results
             document.getElementById('selectedDate').textContent = selectedDate;
@@ -264,5 +264,6 @@
 </body>
 
 </html>
+
 
 
