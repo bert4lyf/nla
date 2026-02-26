@@ -139,6 +139,72 @@
             border-top: 1px solid #bdc3c7;
             color: #7f8c8d;
         }
+
+        .confidence-scores {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #34495e;
+        }
+
+        .confidence-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+        }
+
+            /* Copy button styles (minimal, matches existing theme) */
+            .copy-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            /* Dash-formatted pill */
+            .dash-output {
+                background: #f1f5f9;
+                color: #1f2937;
+                padding: 8px 12px;
+                border-radius: 999px;
+                font-weight: 700;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+                letter-spacing: 0.6px;
+                font-size: 16px;
+                display: inline-block;
+            }
+
+            /* Small circular copy icon (ChatGPT-like) */
+            .copy-button {
+                width: 36px;
+                height: 36px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+                border: 1px solid rgba(44,62,80,0.08);
+                color: #2c3e50;
+                border-radius: 10px;
+                cursor: pointer;
+                padding: 4px;
+                transition: background 0.12s, transform 0.08s;
+            }
+
+            .copy-button svg { width: 18px; height: 18px; }
+
+            .copy-button:hover { background: rgba(44,62,80,0.04); transform: translateY(-1px); }
+
+            .copy-button:active { transform: translateY(0); }
+        .confidence-bar {
+            background: #3498db;
+            height: 4px;
+            margin-top: 2px;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -160,10 +226,47 @@
         
         <button onclick="generateNumbers()">Generate Numbers</button>
         
+        <!-- EVENING/MAIN GAME PREDICTIONS -->
         <div class="results" id="results" style="display: none;">
-            <h2>Simulated Numbers for <span id="selectedDate"></span>:</h2>
+            <h2>Evening/Main Game - <span id="selectedDate"></span></h2>
             <div class="numbers-display" id="numbersDisplay"></div>
-            <p><em>Remember: These are randomly generated </em></p>
+            <div id="eveningConfidence" class="confidence-scores"></div>
+
+            <!-- Dash-formatted output + copy button -->
+            <div class="copy-container" id="eveningCopyContainer" style="display:none;">
+                <span id="eveningCopyText" class="dash-output" aria-live="polite"></span>
+                <button id="copyEveningBtn" class="copy-button" onclick="copyEvening()" aria-label="Copy evening numbers">
+                    <!-- clipboard icon -->
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M9 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="9" y="3" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <p><em>Let's see how this goes 👌</em></p>
+        </div>
+
+        <!-- NOON RUSH PREDICTIONS -->
+        <div class="results" id="noonResults" style="display: none;">
+            <h2>Noon Rush - <span id="selectedDateNoon"></span></h2>
+            <div class="numbers-display" id="noonNumbersDisplay"></div>
+            <div id="noonConfidence" class="confidence-scores"></div>
+
+            <!-- Dash-formatted output + copy button for Noon Rush -->
+            <div class="copy-container" id="noonCopyContainer" style="display:none;">
+                <span id="noonCopyText" class="dash-output" aria-live="polite"></span>
+                <button id="copyNoonBtn" class="copy-button" onclick="copyNoon()" aria-label="Copy noon numbers">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M9 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="9" y="3" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <p><em>Let's see how this goes 👌</em></p>
         </div>
         
         <div class="educational-info">
@@ -193,72 +296,262 @@
         </div>
     </div>
 
+    <script src="historicalData.js"></script>
+    <script src="dataLoader.js"></script>
+    <script src="featureEngineering.js"></script>
+    <script src="predictor.js"></script>
+    <script src="backtester.js"></script>
+
     <script>
         // Set today's date as default
         document.getElementById('drawDate').valueAsDate = new Date();
         
+        /**
+         * MAIN GENERATION FUNCTION
+         * Integrated ensemble prediction for both Evening and Noon Rush games
+         */
         function generateNumbers() {
             const dateInput = document.getElementById('drawDate').value;
             const selectedDate = new Date(dateInput).toLocaleDateString();
             
-            // Use date as seed for pseudo-random generation
-            const seed = dateInput.split('-').join('');
-            const numbers = generatePseudoRandomNumbers(seed, 10, 90);
-            
-            // Display results
-            document.getElementById('selectedDate').textContent = selectedDate;
+            try {
+                // === EVENING/MAIN GAME PREDICTION ===
+                // Load and prepare evening data
+                const eveningData = dataLoader.loadByGameType('evening', HISTORICAL_DATA);
+                const eveningRecords = eveningData.records;
+
+                if (eveningRecords.length > 0) {
+                    // Generate evening predictions
+                    const eveningPrediction = ensemblePredictor.predict(eveningRecords, 'evening');
+                    displayEveningPredictions(eveningPrediction, selectedDate);
+                } else {
+                    console.warn("No evening data available");
+                }
+
+                // === NOON RUSH PREDICTION ===
+                // Load and prepare noon data (separate pipeline)
+                const noonData = dataLoader.loadByGameType('noon', HISTORICAL_DATA);
+                const noonRecords = noonData.records;
+
+                if (noonRecords.length > 0) {
+                    // Generate noon predictions
+                    const noonPrediction = ensemblePredictor.predict(noonRecords, 'noon');
+                    displayNoonPredictions(noonPrediction, selectedDate);
+                } else {
+                    console.warn("No noon data available");
+                }
+
+                // Show both result sections
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('noonResults').style.display = 'block';
+                
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+
+            } catch (error) {
+                console.error('Prediction error:', error);
+                alert('Error generating predictions. Check console.');
+            }
+        }
+
+        /**
+         * Display Evening/Main Game predictions with confidence scores
+         */
+        function displayEveningPredictions(prediction, dateString) {
+            document.getElementById('selectedDate').textContent = dateString;
             
             const numbersDisplay = document.getElementById('numbersDisplay');
             numbersDisplay.innerHTML = '';
             
-            numbers.forEach(num => {
+            // Display numbers with animation
+            prediction.predictions.forEach((item, index) => {
                 const numberElement = document.createElement('div');
                 numberElement.className = 'number';
-                numberElement.textContent = num;
+                numberElement.textContent = item.number;
                 numbersDisplay.appendChild(numberElement);
             });
+
+            // Display confidence scores
+            const confidenceDiv = document.getElementById('eveningConfidence');
+            confidenceDiv.innerHTML = '<strong>Number Confidence Scores:</strong>';
             
-            document.getElementById('results').style.display = 'block';
+            prediction.predictions.forEach(item => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'confidence-item';
+                
+                const percentage = parseFloat(item.confidenceScore);
+                const barWidth = percentage + '%';
+                
+                scoreItem.innerHTML = `
+                    <span>Number ${item.number}</span>
+                    <span>${item.confidenceScore}%</span>
+                `;
+                
+                const barElement = document.createElement('div');
+                barElement.className = 'confidence-bar';
+                barElement.style.width = barWidth;
+                
+                confidenceDiv.appendChild(scoreItem);
+                confidenceDiv.appendChild(barElement);
+            });
+
+            // Build dash-separated string (e.g., 1-2-3-4-5) for easy copy/paste
+            const eveningNumbers = prediction.predictions.map(p => p.number).sort((a,b)=>a-b);
+            const eveningDashString = eveningNumbers.join('-');
+
+            const eveningCopyText = document.getElementById('eveningCopyText');
+            const eveningCopyContainer = document.getElementById('eveningCopyContainer');
+            if (eveningCopyText && eveningCopyContainer) {
+                eveningCopyText.textContent = eveningDashString;
+                eveningCopyContainer.style.display = 'flex';
+                // store original icon html for restore after flash
+                const btn = document.getElementById('copyEveningBtn');
+                if (btn && !btn.dataset.original) btn.dataset.original = btn.innerHTML;
+            }
+
+            console.log('Evening prediction:', prediction);
+        }
+
+        /**
+         * Display Noon Rush predictions with confidence scores
+         * Identical structure to evening but separate game type
+         */
+        function displayNoonPredictions(prediction, dateString) {
+            document.getElementById('selectedDateNoon').textContent = dateString;
             
-            // Scroll to results
-            document.getElementById('results').scrollIntoView({ 
-                behavior: 'smooth' 
+            const noonDisplay = document.getElementById('noonNumbersDisplay');
+            noonDisplay.innerHTML = '';
+            
+            // Display numbers with animation
+            prediction.predictions.forEach((item, index) => {
+                const numberElement = document.createElement('div');
+                numberElement.className = 'number';
+                numberElement.textContent = item.number;
+                noonDisplay.appendChild(numberElement);
+            });
+
+            // Display confidence scores
+            const confidenceDiv = document.getElementById('noonConfidence');
+            confidenceDiv.innerHTML = '<strong>Number Confidence Scores:</strong>';
+            
+            prediction.predictions.forEach(item => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'confidence-item';
+                
+                const percentage = parseFloat(item.confidenceScore);
+                const barWidth = percentage + '%';
+                
+                scoreItem.innerHTML = `
+                    <span>Number ${item.number}</span>
+                    <span>${item.confidenceScore}%</span>
+                `;
+                
+                const barElement = document.createElement('div');
+                barElement.className = 'confidence-bar';
+                barElement.style.width = barWidth;
+                
+                confidenceDiv.appendChild(scoreItem);
+                confidenceDiv.appendChild(barElement);
+            });
+
+            // Build dash-separated string for Noon Rush and show copy UI
+            const noonNumbers = prediction.predictions.map(p => p.number).sort((a,b)=>a-b);
+            const noonDashString = noonNumbers.join('-');
+
+            const noonCopyText = document.getElementById('noonCopyText');
+            const noonCopyContainer = document.getElementById('noonCopyContainer');
+            if (noonCopyText && noonCopyContainer) {
+                noonCopyText.textContent = noonDashString;
+                noonCopyContainer.style.display = 'flex';
+                const btn = document.getElementById('copyNoonBtn');
+                if (btn && !btn.dataset.original) btn.dataset.original = btn.innerHTML;
+            }
+
+            console.log('Noon prediction:', prediction);
+        }
+
+        /**
+         * Clipboard helpers for copy buttons
+         */
+        function flashButton(btn) {
+            // show check icon briefly
+            if (!btn) return;
+            const original = btn.dataset.original || btn.innerHTML;
+            // check icon SVG
+            const checkSvg = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            btn.innerHTML = checkSvg;
+            setTimeout(() => { btn.innerHTML = original; }, 1100);
+        }
+
+        function copyEvening() {
+            const txt = document.getElementById('eveningCopyText')?.textContent || '';
+            if (!txt) return;
+            navigator.clipboard.writeText(txt).then(() => {
+                const btn = document.getElementById('copyEveningBtn');
+                if (btn) flashButton(btn);
+            }).catch(err => {
+                console.error('Copy failed', err);
             });
         }
-        
-        function generatePseudoRandomNumbers(seed, count, max) {
-            // Simple pseudo-random generator using seed
-            let generated = new Set();
-            let pseudoRandom = simpleRandom(seed);
-            
-            while (generated.size < count) {
-                const num = Math.floor(pseudoRandom() * max) + 1;
-                generated.add(num);
+
+        function copyNoon() {
+            const txt = document.getElementById('noonCopyText')?.textContent || '';
+            if (!txt) return;
+            navigator.clipboard.writeText(txt).then(() => {
+                const btn = document.getElementById('copyNoonBtn');
+                if (btn) flashButton(btn);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        }
+
+        /**
+         * Run backtesting on page load
+         * This validates model performance transparently
+         */
+        function runBacktestingAnalysis() {
+            try {
+                // Backtest evening game
+                const eveningData = dataLoader.loadByGameType('evening', HISTORICAL_DATA);
+                const eveningBacktest = backtester.backtest(eveningData.records, 'evening');
+                
+                console.log('=== EVENING GAME BACKTEST ===');
+                console.log(`Average Overlap: ${eveningBacktest.averageOverlap} (Target: ≥2)`);
+                console.log(`Success Rate: ${eveningBacktest.successRate}%`);
+                console.log(`Win Distribution:`, eveningBacktest.distribution);
+                console.log(`Recommendation: ${eveningBacktest.recommendation}`);
+
+                // Backtest noon game
+                const noonData = dataLoader.loadByGameType('noon', HISTORICAL_DATA);
+                const noonBacktest = backtester.backtest(noonData.records, 'noon');
+                
+                console.log('\n=== NOON RUSH BACKTEST ===');
+                console.log(`Average Overlap: ${noonBacktest.averageOverlap} (Target: ≥2)`);
+                console.log(`Success Rate: ${noonBacktest.successRate}%`);
+                console.log(`Win Distribution:`, noonBacktest.distribution);
+                console.log(`Recommendation: ${noonBacktest.recommendation}`);
+
+                // Comparison to baseline
+                const eveningComparison = backtester.compareToBaseline(eveningData.records, 'evening');
+                console.log('\n=== ENSEMBLE vs BASELINE (Evening) ===');
+                console.log(`Ensemble Avg: ${eveningComparison.ensemble.average} | Baseline Avg: ${eveningComparison.baseline.average}`);
+                console.log(`Improvement: +${eveningComparison.improvement.overlapIncrease} overlaps per draw`);
+
+            } catch (error) {
+                console.error('Backtesting error:', error);
             }
-            
-            return Array.from(generated).sort((a, b) => a - b);
         }
-        
-        function simpleRandom(seed) {
-            let value = hashString(seed);
-            return function() {
-                value = (value * 9301 + 49297) % 233280;
-                return value / 233280;
-            };
-        }
-        
-        function hashString(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                hash |= 0; // Convert to 32bit integer
-            }
-            return Math.abs(hash);
-        }
-        
+
         // Generate numbers on page load for today
         window.addEventListener('load', function() {
-            setTimeout(generateNumbers, 1000);
+            setTimeout(() => {
+                generateNumbers();
+                // Run backtesting analysis in background (visible in console)
+                console.log('Running model validation against historical data...');
+                runBacktestingAnalysis();
+            }, 1000);
         });
     </script>
 </body>
