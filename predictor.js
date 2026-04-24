@@ -10,7 +10,7 @@ class EnsemblePredictor {
             entropyReduction: 0.20 // Signal-to-noise filtering
         };
 
-        this.TARGET_COUNT = 5; // Always output exactly 5 numbers
+        this.TARGET_COUNT = 10; // Always output exactly 5 numbers
     }
 
     /**
