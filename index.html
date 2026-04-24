@@ -2,564 +2,634 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NLA Number Simulator - Practical</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>NLA Number Simulator | Official Interactive Tool</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #667eea;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(145deg, #f0f4fb 0%, #e6edf7 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 2rem 1rem;
         }
-        
+
+        /* modern container */
         .container {
-            max-width: 800px;
+            max-width: 1300px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        
+
+        /* main card header */
+        .main-panel {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .content-inner {
+            padding: 2rem 2rem 2rem 2rem;
+        }
+
+        /* warning banner – official but friendly */
         .warning-banner {
-            background: #ff6b6b;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            border-left: 5px solid #c0392b;
+            background: #fff7e5;
+            border-left: 6px solid #f39c12;
+            border-radius: 1.25rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        
-        h1 {
-            text-align: center;
+        .warning-banner strong {
+            color: #c0392b;
+            font-weight: 700;
+        }
+        .warning-icon {
+            font-size: 1.8rem;
+        }
+        .warning-text {
+            flex: 1;
+            font-size: 0.9rem;
             color: #2c3e50;
-            margin-bottom: 20px;
+            line-height: 1.4;
         }
-        
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1E2A47, #2C3E66);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eef2f8;
+            padding-bottom: 1rem;
+        }
+        .subhead {
+            color: #5a6e85;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* date & generate area */
+        .action-card {
+            background: #f8fafd;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0 2rem 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
         .input-group {
-            margin: 20px 0;
+            margin-bottom: 1.2rem;
         }
-        
         label {
+            font-weight: 600;
+            color: #1f2b3e;
+            margin-bottom: 0.5rem;
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #34495e;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
         input[type="date"] {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #bdc3c7;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 0.9rem 1.2rem;
+            background: white;
+            border: 1px solid #cfdfed;
+            border-radius: 1.2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1e2b3c;
+            transition: all 0.2s;
+            font-family: inherit;
         }
-        
-        button {
-            background: #3498db;
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .generate-btn {
+            background: linear-gradient(105deg, #1e3b5a, #0f2c44);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 18px;
+            padding: 0.9rem 1.6rem;
+            border-radius: 2rem;
+            font-size: 1.05rem;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: background 0.3s;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
-        
-        button:hover {
-            background: #2980b9;
+        .generate-btn:hover {
+            background: linear-gradient(105deg, #14324b, #0a1f32);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15);
         }
-        
-        .results {
-            margin-top: 30px;
-            text-align: center;
+        .generate-btn:active {
+            transform: translateY(1px);
         }
-        
+
+        /* game row: two cards */
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin: 2rem 0 1.5rem;
+        }
+        @media (max-width: 780px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        .game-card {
+            background: white;
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s ease;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .game-header {
+            background: #fefefe;
+            padding: 1.2rem 1.5rem 0.6rem 1.5rem;
+            border-bottom: 2px solid #eef3fc;
+        }
+        .game-header h2 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #1e2d49;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-badge {
+            background: #eef2ff;
+            border-radius: 30px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+        .game-body {
+            padding: 1.5rem;
+        }
+
+        /* numbers display */
         .numbers-display {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 0.9rem;
+            margin: 1rem 0 0.8rem;
         }
-        
         .number {
-            width: 60px;
-            height: 60px;
-            background: #e74c3c;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(145deg, #2c3e66, #1f2e4a);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            animation: pop 0.5s ease-out;
-        }
-        
-        @keyframes pop {
-            0% { transform: scale(0); }
-            70% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        
-        .educational-info {
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-        }
-        
-        .educational-info h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-        
-        .educational-info ul {
-            list-style-position: inside;
-            text-align: left;
-        }
-        
-        .educational-info li {
-            margin-bottom: 10px;
-            color: #34495e;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #bdc3c7;
-            color: #7f8c8d;
+            font-size: 1.7rem;
+            font-weight: 800;
+            box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+            font-feature-settings: "tnum";
+            letter-spacing: 0;
         }
 
+        /* confidence area */
+        .confidence-section {
+            background: #f9fbfe;
+            border-radius: 1.2rem;
+            padding: 1rem 1rem 0.8rem 1rem;
+            margin: 1rem 0 0.8rem;
+        }
         .confidence-scores {
-            margin-top: 15px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #34495e;
+            font-size: 0.85rem;
         }
-
         .confidence-item {
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
-            padding: 5px 0;
+            align-items: baseline;
+            margin: 10px 0 4px;
+            font-weight: 500;
+        }
+        .confidence-bar {
+            height: 6px;
+            background: #3b82f6;
+            border-radius: 6px;
+            margin: 4px 0 6px 0;
+            transition: width 0.2s ease;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
         }
 
-            /* Copy button styles (minimal, matches existing theme) */
-            .copy-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                margin-top: 12px;
-            }
+        /* dash copy row */
+        .copy-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 1rem 0 0.5rem;
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .dash-output {
+            background: #ffffff;
+            color: #0f2b3f;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #e2edf7;
+        }
+        .copy-button {
+            background: transparent;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #2c3e50;
+        }
+        .copy-button:hover {
+            background: rgba(0,0,0,0.05);
+            transform: scale(1.02);
+        }
 
-            /* Dash-formatted pill */
-            .dash-output {
-                background: #f1f5f9;
-                color: #1f2937;
-                padding: 8px 12px;
-                border-radius: 999px;
-                font-weight: 700;
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-                letter-spacing: 0.6px;
-                font-size: 16px;
-                display: inline-block;
-            }
+        .footer-note {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #6c7e97;
+            text-align: center;
+        }
 
-            /* Small circular copy icon (ChatGPT-like) */
-            .copy-button {
-                width: 36px;
-                height: 36px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                background: transparent;
-                border: 1px solid rgba(44,62,80,0.08);
-                color: #2c3e50;
-                border-radius: 10px;
-                cursor: pointer;
-                padding: 4px;
-                transition: background 0.12s, transform 0.08s;
-            }
+        /* educational cards section */
+        .info-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+        .info-card {
+            flex: 1;
+            background: #ffffffdd;
+            backdrop-filter: blur(2px);
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+            border: 1px solid #eef2fa;
+        }
+        .info-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #1f374e;
+        }
+        .info-card ul {
+            list-style: none;
+        }
+        .info-card li {
+            margin-bottom: 0.7rem;
+            padding-left: 1.4rem;
+            position: relative;
+            color: #2c4c6e;
+        }
+        .info-card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
 
-            .copy-button svg { width: 18px; height: 18px; }
+        hr {
+            margin: 1rem 0;
+            border-color: #eef2f8;
+        }
+        .footer {
+            text-align: center;
+            padding: 1rem 0 0.5rem;
+            color: #6c7f99;
+            font-size: 0.8rem;
+            border-top: 1px solid #eef2f8;
+            margin-top: 2rem;
+        }
 
-            .copy-button:hover { background: rgba(44,62,80,0.04); transform: translateY(-1px); }
-
-            .copy-button:active { transform: translateY(0); }
-        .confidence-bar {
-            background: #3498db;
-            height: 4px;
-            margin-top: 2px;
-            border-radius: 2px;
+        @keyframes gentlePop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .number {
+            animation: gentlePop 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="warning-banner">
-            <strong>⚠️ IMPORTANT DISCLAIMER:</strong> This is a PROGRAMMED simulator. 
-            Lottery numbers are RANDOM and CANNOT be predicted. No "sure winning" numbers exist.
-        </div>
-        
-        <h1>🎰 NLA Number Simulator</h1>
-        <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">
-            For Practical and Entertainment Purposes Only
-        </p>
-        
-        <div class="input-group">
-            <label for="drawDate">Select a Date:</label>
-            <input type="date" id="drawDate">
-        </div>
-        
-        <button onclick="generateNumbers()">Generate Numbers</button>
-        
-        <!-- EVENING/MAIN GAME PREDICTIONS -->
-        <div class="results" id="results" style="display: none;">
-            <h2>Evening/Main Game - <span id="selectedDate"></span></h2>
-            <div class="numbers-display" id="numbersDisplay"></div>
-            <div id="eveningConfidence" class="confidence-scores"></div>
+<div class="container">
+    <div class="main-panel">
+        <div class="content-inner">
+            
+            <div class="title-section">
+                <div>
+                    <h1>🎲 NLA Number Simulator</h1>
+                    <div class="subhead">official interactive tool · statistical awareness</div>
+                </div>
+            </div>
 
-            <!-- Dash-formatted output + copy button -->
-            <div class="copy-container" id="eveningCopyContainer" style="display:none;">
-                <span id="eveningCopyText" class="dash-output" aria-live="polite"></span>
-                <button id="copyEveningBtn" class="copy-button" onclick="copyEvening()" aria-label="Copy evening numbers">
-                    <!-- clipboard icon -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M9 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <rect x="9" y="3" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+            <!-- date and generate card -->
+            <div class="action-card">
+                <div class="input-group">
+                    <label for="drawDate">📅 Select draw date</label>
+                    <input type="date" id="drawDate">
+                </div>
+                <button class="generate-btn" onclick="generateNumbers()">
+                    ✨ Generate Numbers
                 </button>
             </div>
 
-            <p><em>Let's see how this goes 👌</em></p>
-        </div>
+            <!-- two columns for Evening and Noon (maintain original blocks) -->
+            <div class="games-grid">
+                <!-- EVENING MAIN GAME CARD -->
+                <div class="game-card">
+                    <div class="game-header">
+                        <h2>🌙 Evening / Main Game </h2>
+                    </div>
+                    <div class="game-body">
+                        <div class="results" id="results" style="display: none;">
+                            <div><span id="selectedDate" style="font-weight: 500;"></span></div>
+                            <div class="numbers-display" id="numbersDisplay"></div>
+                            <div class="confidence-section">
+                                <div id="eveningConfidence" class="confidence-scores"></div>
+                            </div>
+                            <div class="copy-container" id="eveningCopyContainer" style="display:none;">
+                                <span id="eveningCopyText" class="dash-output"></span>
+                                <button id="copyEveningBtn" class="copy-button" onclick="copyEvening()" aria-label="Copy evening numbers">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="9" y="3" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="footer-note">✨ ensemble projection</div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- NOON RUSH PREDICTIONS -->
-        <div class="results" id="noonResults" style="display: none;">
-            <h2>Noon Rush - <span id="selectedDateNoon"></span></h2>
-            <div class="numbers-display" id="noonNumbersDisplay"></div>
-            <div id="noonConfidence" class="confidence-scores"></div>
-
-            <!-- Dash-formatted output + copy button for Noon Rush -->
-            <div class="copy-container" id="noonCopyContainer" style="display:none;">
-                <span id="noonCopyText" class="dash-output" aria-live="polite"></span>
-                <button id="copyNoonBtn" class="copy-button" onclick="copyNoon()" aria-label="Copy noon numbers">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M9 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <rect x="9" y="3" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <!-- NOON RUSH CARD -->
+                <div class="game-card">
+                    <div class="game-header">
+                        <h2>☀️ Noon Rush </h2>
+                    </div>
+                    <div class="game-body">
+                        <div class="results" id="noonResults" style="display: none;">
+                            <div><span id="selectedDateNoon" style="font-weight: 500;"></span></div>
+                            <div class="numbers-display" id="noonNumbersDisplay"></div>
+                            <div class="confidence-section">
+                                <div id="noonConfidence" class="confidence-scores"></div>
+                            </div>
+                            <div class="copy-container" id="noonCopyContainer" style="display:none;">
+                                <span id="noonCopyText" class="dash-output"></span>
+                                <button id="copyNoonBtn" class="copy-button" onclick="copyNoon()" aria-label="Copy noon numbers">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="9" y="3" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9 7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="footer-note">✨ ensemble projection</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <p><em>Let's see how this goes 👌</em></p>
-        </div>
-        
-        <div class="educational-info">
-            <h3>🎯 Why Lottery Prediction is Impossible</h3>
-            <ul>
-                <li>🎲 Lottery draws are designed to be completely random</li>
-                <li>📊 Each number has equal probability of being drawn</li>
-                <li>🔢 Past results do not influence future draws</li>
-                <li>📈 Odds of winning are extremely low (mathematically)</li>
-                <li>💡 No software or system can predict random events</li>
-            </ul>
-        </div>
-        
-        <div class="educational-info" style="background: #fff3cd; border-left: 5px solid #ffc107;">
-            <h3>🎯 Responsible Gambling Information</h3>
-            <ul>
-                <li>💰 Set a budget and stick to it</li>
-                <li>⏰ Take regular breaks from gambling</li>
-                <li>🎯 Treat lottery as entertainment, not investment</li>
-                <li>🚫 Never chase losses</li>
-                <li>📞 Need help? Call +233 20 544 0019</li>
-            </ul>
-        </div>
-        
-        <div class="footer">
-            <p>This simulator is for practical purposes only. Always gamble responsibly.</p>
+                    <h3>🧠 Responsible gaming</h3>
+                    <ul>
+                        <li>Set a budget and never chase losses.</li>
+                        <li>Play for entertainment, not as an investment.</li>
+                        <li>Take regular breaks and stay informed.</li>
+                        <li>🇬🇭 Need support? Contact gaming helpline: +233 20 544 0019</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© NLA Number Simulator — for practical demonstration. All predictions are generated algorithmically for illustrative purposes.</p>
+            </div>
         </div>
     </div>
+</div>
 
-    <script src="historicalData.js"></script>
-    <script src="dataLoader.js"></script>
-    <script src="featureEngineering.js"></script>
-    <script src="predictor.js"></script>
-    <script src="backtester.js"></script>
+<!-- original script files (preserved) -->
+<script src="historicalData.js"></script>
+<script src="dataLoader.js"></script>
+<script src="featureEngineering.js"></script>
+<script src="predictor.js"></script>
+<script src="backtester.js"></script>
 
-    <script>
-        // Set today's date as default
-        document.getElementById('drawDate').valueAsDate = new Date();
+<script>
+    // Set today's date as default
+    document.getElementById('drawDate').valueAsDate = new Date();
+
+    /**
+     * MAIN GENERATION FUNCTION - unchanged logic, only UI updated
+     */
+    function generateNumbers() {
+        const dateInput = document.getElementById('drawDate').value;
+        const selectedDate = new Date(dateInput).toLocaleDateString();
         
-        /**
-         * MAIN GENERATION FUNCTION
-         * Integrated ensemble prediction for both Evening and Noon Rush games
-         */
-        function generateNumbers() {
-            const dateInput = document.getElementById('drawDate').value;
-            const selectedDate = new Date(dateInput).toLocaleDateString();
-            
-            try {
-                // === EVENING/MAIN GAME PREDICTION ===
-                // Load and prepare evening data
-                const eveningData = dataLoader.loadByGameType('evening', HISTORICAL_DATA);
-                const eveningRecords = eveningData.records;
-
-                if (eveningRecords.length > 0) {
-                    // Generate evening predictions
-                    const eveningPrediction = ensemblePredictor.predict(eveningRecords, 'evening');
-                    displayEveningPredictions(eveningPrediction, selectedDate);
-                } else {
-                    console.warn("No evening data available");
-                }
-
-                // === NOON RUSH PREDICTION ===
-                // Load and prepare noon data (separate pipeline)
-                const noonData = dataLoader.loadByGameType('noon', HISTORICAL_DATA);
-                const noonRecords = noonData.records;
-
-                if (noonRecords.length > 0) {
-                    // Generate noon predictions
-                    const noonPrediction = ensemblePredictor.predict(noonRecords, 'noon');
-                    displayNoonPredictions(noonPrediction, selectedDate);
-                } else {
-                    console.warn("No noon data available");
-                }
-
-                // Show both result sections
-                document.getElementById('results').style.display = 'block';
-                document.getElementById('noonResults').style.display = 'block';
-                
-                // Scroll to results
-                document.getElementById('results').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-
-            } catch (error) {
-                console.error('Prediction error:', error);
-                alert('Error generating predictions. Check console.');
-            }
-        }
-
-        /**
-         * Display Evening/Main Game predictions with confidence scores
-         */
-        function displayEveningPredictions(prediction, dateString) {
-            document.getElementById('selectedDate').textContent = dateString;
-            
-            const numbersDisplay = document.getElementById('numbersDisplay');
-            numbersDisplay.innerHTML = '';
-            
-            // Display numbers with animation
-            prediction.predictions.forEach((item, index) => {
-                const numberElement = document.createElement('div');
-                numberElement.className = 'number';
-                numberElement.textContent = item.number;
-                numbersDisplay.appendChild(numberElement);
-            });
-
-            // Display confidence scores
-            const confidenceDiv = document.getElementById('eveningConfidence');
-            confidenceDiv.innerHTML = '<strong>Number Confidence Scores:</strong>';
-            
-            prediction.predictions.forEach(item => {
-                const scoreItem = document.createElement('div');
-                scoreItem.className = 'confidence-item';
-                
-                const percentage = parseFloat(item.confidenceScore);
-                const barWidth = percentage + '%';
-                
-                scoreItem.innerHTML = `
-                    <span>Number ${item.number}</span>
-                    <span>${item.confidenceScore}%</span>
-                `;
-                
-                const barElement = document.createElement('div');
-                barElement.className = 'confidence-bar';
-                barElement.style.width = barWidth;
-                
-                confidenceDiv.appendChild(scoreItem);
-                confidenceDiv.appendChild(barElement);
-            });
-
-            // Build dash-separated string (e.g., 1-2-3-4-5) for easy copy/paste
-            const eveningNumbers = prediction.predictions.map(p => p.number).sort((a,b)=>a-b);
-            const eveningDashString = eveningNumbers.join('-');
-
-            const eveningCopyText = document.getElementById('eveningCopyText');
-            const eveningCopyContainer = document.getElementById('eveningCopyContainer');
-            if (eveningCopyText && eveningCopyContainer) {
-                eveningCopyText.textContent = eveningDashString;
-                eveningCopyContainer.style.display = 'flex';
-                // store original icon html for restore after flash
-                const btn = document.getElementById('copyEveningBtn');
-                if (btn && !btn.dataset.original) btn.dataset.original = btn.innerHTML;
+        try {
+            // Evening predictions
+            const eveningData = dataLoader.loadByGameType('evening', HISTORICAL_DATA);
+            const eveningRecords = eveningData.records;
+            if (eveningRecords.length > 0) {
+                const eveningPrediction = ensemblePredictor.predict(eveningRecords, 'evening');
+                displayEveningPredictions(eveningPrediction, selectedDate);
+            } else {
+                console.warn("No evening data available");
             }
 
-            console.log('Evening prediction:', prediction);
-        }
-
-        /**
-         * Display Noon Rush predictions with confidence scores
-         * Identical structure to evening but separate game type
-         */
-        function displayNoonPredictions(prediction, dateString) {
-            document.getElementById('selectedDateNoon').textContent = dateString;
-            
-            const noonDisplay = document.getElementById('noonNumbersDisplay');
-            noonDisplay.innerHTML = '';
-            
-            // Display numbers with animation
-            prediction.predictions.forEach((item, index) => {
-                const numberElement = document.createElement('div');
-                numberElement.className = 'number';
-                numberElement.textContent = item.number;
-                noonDisplay.appendChild(numberElement);
-            });
-
-            // Display confidence scores
-            const confidenceDiv = document.getElementById('noonConfidence');
-            confidenceDiv.innerHTML = '<strong>Number Confidence Scores:</strong>';
-            
-            prediction.predictions.forEach(item => {
-                const scoreItem = document.createElement('div');
-                scoreItem.className = 'confidence-item';
-                
-                const percentage = parseFloat(item.confidenceScore);
-                const barWidth = percentage + '%';
-                
-                scoreItem.innerHTML = `
-                    <span>Number ${item.number}</span>
-                    <span>${item.confidenceScore}%</span>
-                `;
-                
-                const barElement = document.createElement('div');
-                barElement.className = 'confidence-bar';
-                barElement.style.width = barWidth;
-                
-                confidenceDiv.appendChild(scoreItem);
-                confidenceDiv.appendChild(barElement);
-            });
-
-            // Build dash-separated string for Noon Rush and show copy UI
-            const noonNumbers = prediction.predictions.map(p => p.number).sort((a,b)=>a-b);
-            const noonDashString = noonNumbers.join('-');
-
-            const noonCopyText = document.getElementById('noonCopyText');
-            const noonCopyContainer = document.getElementById('noonCopyContainer');
-            if (noonCopyText && noonCopyContainer) {
-                noonCopyText.textContent = noonDashString;
-                noonCopyContainer.style.display = 'flex';
-                const btn = document.getElementById('copyNoonBtn');
-                if (btn && !btn.dataset.original) btn.dataset.original = btn.innerHTML;
+            // Noon predictions
+            const noonData = dataLoader.loadByGameType('noon', HISTORICAL_DATA);
+            const noonRecords = noonData.records;
+            if (noonRecords.length > 0) {
+                const noonPrediction = ensemblePredictor.predict(noonRecords, 'noon');
+                displayNoonPredictions(noonPrediction, selectedDate);
+            } else {
+                console.warn("No noon data available");
             }
 
-            console.log('Noon prediction:', prediction);
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('noonResults').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Prediction error:', error);
+            alert('Error generating predictions. Check console.');
         }
+    }
 
-        /**
-         * Clipboard helpers for copy buttons
-         */
-        function flashButton(btn) {
-            // show check icon briefly
-            if (!btn) return;
-            const original = btn.dataset.original || btn.innerHTML;
-            // check icon SVG
-            const checkSvg = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-            btn.innerHTML = checkSvg;
-            setTimeout(() => { btn.innerHTML = original; }, 1100);
-        }
-
-        function copyEvening() {
-            const txt = document.getElementById('eveningCopyText')?.textContent || '';
-            if (!txt) return;
-            navigator.clipboard.writeText(txt).then(() => {
-                const btn = document.getElementById('copyEveningBtn');
-                if (btn) flashButton(btn);
-            }).catch(err => {
-                console.error('Copy failed', err);
-            });
-        }
-
-        function copyNoon() {
-            const txt = document.getElementById('noonCopyText')?.textContent || '';
-            if (!txt) return;
-            navigator.clipboard.writeText(txt).then(() => {
-                const btn = document.getElementById('copyNoonBtn');
-                if (btn) flashButton(btn);
-            }).catch(err => {
-                console.error('Copy failed', err);
-            });
-        }
-
-        /**
-         * Run backtesting on page load
-         * This validates model performance transparently
-         */
-        function runBacktestingAnalysis() {
-            try {
-                // Backtest evening game
-                const eveningData = dataLoader.loadByGameType('evening', HISTORICAL_DATA);
-                const eveningBacktest = backtester.backtest(eveningData.records, 'evening');
-                
-                console.log('=== EVENING GAME BACKTEST ===');
-                console.log(`Average Overlap: ${eveningBacktest.averageOverlap} (Target: ≥2)`);
-                console.log(`Success Rate: ${eveningBacktest.successRate}%`);
-                console.log(`Win Distribution:`, eveningBacktest.distribution);
-                console.log(`Recommendation: ${eveningBacktest.recommendation}`);
-
-                // Backtest noon game
-                const noonData = dataLoader.loadByGameType('noon', HISTORICAL_DATA);
-                const noonBacktest = backtester.backtest(noonData.records, 'noon');
-                
-                console.log('\n=== NOON RUSH BACKTEST ===');
-                console.log(`Average Overlap: ${noonBacktest.averageOverlap} (Target: ≥2)`);
-                console.log(`Success Rate: ${noonBacktest.successRate}%`);
-                console.log(`Win Distribution:`, noonBacktest.distribution);
-                console.log(`Recommendation: ${noonBacktest.recommendation}`);
-
-                // Comparison to baseline
-                const eveningComparison = backtester.compareToBaseline(eveningData.records, 'evening');
-                console.log('\n=== ENSEMBLE vs BASELINE (Evening) ===');
-                console.log(`Ensemble Avg: ${eveningComparison.ensemble.average} | Baseline Avg: ${eveningComparison.baseline.average}`);
-                console.log(`Improvement: +${eveningComparison.improvement.overlapIncrease} overlaps per draw`);
-
-            } catch (error) {
-                console.error('Backtesting error:', error);
-            }
-        }
-
-        // Generate numbers on page load for today
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                generateNumbers();
-                // Run backtesting analysis in background (visible in console)
-                console.log('Running model validation against historical data...');
-                runBacktestingAnalysis();
-            }, 1000);
+    function displayEveningPredictions(prediction, dateString) {
+        document.getElementById('selectedDate').textContent = dateString;
+        const numbersDisplay = document.getElementById('numbersDisplay');
+        numbersDisplay.innerHTML = '';
+        prediction.predictions.forEach(item => {
+            const numberElement = document.createElement('div');
+            numberElement.className = 'number';
+            numberElement.textContent = item.number;
+            numbersDisplay.appendChild(numberElement);
         });
-    </script>
+
+        const confidenceDiv = document.getElementById('eveningConfidence');
+        confidenceDiv.innerHTML = '<strong style="display:block; margin-bottom:8px;">📊 Confidence score</strong>';
+        prediction.predictions.forEach(item => {
+            const scoreItem = document.createElement('div');
+            scoreItem.className = 'confidence-item';
+            const percent = parseFloat(item.confidenceScore);
+            scoreItem.innerHTML = `<span>Number ${item.number}</span><span>${percent}%</span>`;
+            const barElement = document.createElement('div');
+            barElement.className = 'confidence-bar';
+            barElement.style.width = percent + '%';
+            confidenceDiv.appendChild(scoreItem);
+            confidenceDiv.appendChild(barElement);
+        });
+
+        const eveningNumbers = prediction.predictions.map(p => p.number).sort((a,b)=>a-b);
+        const dashString = eveningNumbers.join('-');
+        const eveningCopyText = document.getElementById('eveningCopyText');
+        const eveningCopyContainer = document.getElementById('eveningCopyContainer');
+        if (eveningCopyText && eveningCopyContainer) {
+            eveningCopyText.textContent = dashString;
+            eveningCopyContainer.style.display = 'flex';
+            const btn = document.getElementById('copyEveningBtn');
+            if (btn && !btn.dataset.original) btn.dataset.original = btn.innerHTML;
+        }
+    }
+
+    function displayNoonPredictions(prediction, dateString) {
+        document.getElementById('selectedDateNoon').textContent = dateString;
+        const noonDisplay = document.getElementById('noonNumbersDisplay');
+        noonDisplay.innerHTML = '';
+        prediction.predictions.forEach(item => {
+            const numberElement = document.createElement('div');
+            numberElement.className = 'number';
+            numberElement.textContent = item.number;
+            noonDisplay.appendChild(numberElement);
+        });
+
+        const confidenceDiv = document.getElementById('noonConfidence');
+        confidenceDiv.innerHTML = '<strong style="display:block; margin-bottom:8px;">📊 Confidence score</strong>';
+        prediction.predictions.forEach(item => {
+            const scoreItem = document.createElement('div');
+            scoreItem.className = 'confidence-item';
+            const percent = parseFloat(item.confidenceScore);
+            scoreItem.innerHTML = `<span>Number ${item.number}</span><span>${percent}%</span>`;
+            const barElement = document.createElement('div');
+            barElement.className = 'confidence-bar';
+            barElement.style.width = percent + '%';
+            confidenceDiv.appendChild(scoreItem);
+            confidenceDiv.appendChild(barElement);
+        });
+
+        const noonNumbers = prediction.predictions.map(p => p.number).sort((a,b)=>a-b);
+        const noonDashString = noonNumbers.join('-');
+        const noonCopyText = document.getElementById('noonCopyText');
+        const noonCopyContainer = document.getElementById('noonCopyContainer');
+        if (noonCopyText && noonCopyContainer) {
+            noonCopyText.textContent = noonDashString;
+            noonCopyContainer.style.display = 'flex';
+            const btn = document.getElementById('copyNoonBtn');
+            if (btn && !btn.dataset.original) btn.dataset.original = btn.innerHTML;
+        }
+    }
+
+    function flashButton(btn) {
+        if (!btn) return;
+        const original = btn.dataset.original || btn.innerHTML;
+        const checkSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        btn.innerHTML = checkSvg;
+        setTimeout(() => { btn.innerHTML = original; }, 1100);
+    }
+
+    function copyEvening() {
+        const txt = document.getElementById('eveningCopyText')?.textContent || '';
+        if (!txt) return;
+        navigator.clipboard.writeText(txt).then(() => {
+            const btn = document.getElementById('copyEveningBtn');
+            if (btn) flashButton(btn);
+        }).catch(err => console.error('Copy failed', err));
+    }
+
+    function copyNoon() {
+        const txt = document.getElementById('noonCopyText')?.textContent || '';
+        if (!txt) return;
+        navigator.clipboard.writeText(txt).then(() => {
+            const btn = document.getElementById('copyNoonBtn');
+            if (btn) flashButton(btn);
+        }).catch(err => console.error('Copy failed', err));
+    }
+
+    function runBacktestingAnalysis() {
+        try {
+            const eveningData = dataLoader.loadByGameType('evening', HISTORICAL_DATA);
+            const eveningBacktest = backtester.backtest(eveningData.records, 'evening');
+            console.log('=== EVENING BACKTEST ===', eveningBacktest);
+            const noonData = dataLoader.loadByGameType('noon', HISTORICAL_DATA);
+            const noonBacktest = backtester.backtest(noonData.records, 'noon');
+            console.log('=== NOON BACKTEST ===', noonBacktest);
+        } catch(e) { console.warn(e); }
+    }
+
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            generateNumbers();
+            runBacktestingAnalysis();
+        }, 120);
+    });
+</script>
 </body>
-
 </html>
-
-
-
-
-
-
